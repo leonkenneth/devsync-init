@@ -88,10 +88,10 @@ func main() {
 		}
 
 		// Add our buildpack
-		appendToFile("./.buildpacks", "https://github.com/leonkenneth/heroku-buildpack-dev.git")
+		appendToFile("./.buildpacks", "https://github.com/leonkenneth/heroku-buildpack-devsync.git")
 
 		command("git", "add", ".buildpacks")
-		command("git", "commit", "-m", "\"Add herodev\"")
+		command("git", "commit", "-m", "\"Add devsync\"")
 	}
 
 	info("All set.\nIf not done already, you can review our last commit with `git show -p`.\nWhen you're ready, `git push heroku master` to get the magic started.\nThen run `heroku dev:watch` at the beginning of your coding session.")
