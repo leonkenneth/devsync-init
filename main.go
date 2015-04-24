@@ -63,10 +63,17 @@ func appendToFile(fileName string, content string) {
 	f.Close()
 }
 
+func heroku(args ...string) string {
+	appName := os.Args[1]
+	args = append(args, "--app", appName)
+	args = append([]string{"heroku"}, args...)
+	return command(args...)
+}
+
 func main() {
-	if command("heroku", "config:get", "DEVSYNC") == "" {
-		info("Setting DEVSYNC configuration key")
-		command("heroku", "config:set", "DEVSYNC="+guuid())
+	if heroku("config:get", "DEVSYNC_TOKEN") == "" {
+		info("Setting DEVSYNC_TOKEN configuration key")
+		heroku("config:set", "DEVSYNC_TOKEN="+guuid())
 	}
 
 	if !gitClean() {
@@ -79,12 +86,11 @@ func main() {
 
 		if !fileExists("./.buildpacks") {
 			// Get current buildpack
-			currentBuildpack := command("heroku", "config:get", "BUILDPACK_URL")
+			currentBuildpack := heroku("config:get", "BUILDPACK_URL")
 			// Create .buildpacks with it
-			info(currentBuildpack)
 			createFile("./.buildpacks", currentBuildpack)
 			// Use multipack buildpack
-			command("heroku", "config:set", "BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git")
+			heroku("config:set", "BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git")
 		}
 
 		// Add our buildpack
